@@ -1,0 +1,50 @@
+<html>
+
+<head>
+    <title>
+        MOVIE
+    </title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <script>
+        var data = [];
+        async function callApi() {
+            const api_url = 'http://www.omdbapi.com/?i=tt3896198&apikey=940b3fea&';
+            const response = await fetch(api_url);
+            data.push(await response.json());
+            showMovie();
+        }
+
+        function showMovie() {
+            document.getElementById("showMovie").innerHTML =
+                '<div class="col-md-3 col-sm-6" style="margin-top: 20px;text-align: center;"> <div class="card"> <img class="card-img-top" src="' +
+                data[0].Poster + ' "> <div class="card-body"> <h3 class="card-title">' + data[0].Title + '</h3> <p class="card-text">' + data[0].Plot +
+                '</p> <a href="#" class="btn btn-primary" style="position: relative !important; margin-top: 0px;float: right;">Know More</a> </div> </div> </div>'
+        }
+    </script>
+</head>
+
+<body onload="callApi()" style="background-color: #181818; color: blanchedalmond;">
+    <div class="col-sm-12" style="max-height: 61px;background-color: black;">
+        <h1 style="margin-top: 10px; color: #e50914; font-family: cursive; font-weight: 900;">
+            Movie World
+        </h1>
+    </div>
+    <div id="showMovie" class="col-sm-12">
+        <!-- <div class="col-md-3 col-sm-6" style="margin-top: 20px;text-align: center;">
+            <div class="card">
+                <img class="card-img-top" src="https://m.media-amazon.com/images/M/MV5BNjM0NTc0NzItM2FlYS00YzEwLWE0YmUtNTA2ZWIzODc2OTgxXkEyXkFqcGdeQXVyNTgwNzIyNzg@._V1_SX300.jpg">
+                <div class="card-body">
+                    <h3 class="card-title">data.Title</h3>
+                    <p class="card-text">data.Plot</p>
+                    <a href="#" class="btn btn-primary" style="position: relative !important; margin-top: 0px;float: right;">Know More</a>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</body>
+
+</html>
