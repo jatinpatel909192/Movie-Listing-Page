@@ -8,42 +8,95 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
     <script>
-        var data = [];
-        async function callApi() {
-            const api_url = 'http://www.omdbapi.com/?i=tt3896198&apikey=940b3fea&';
-            const response = await fetch(api_url);
-            data.push(await response.json());
-            showMovie();
+        var movieList = [];
+        const urlPath = "https://api.themoviedb.org/3/movie/popular";
+        const imageUrl = "https://image.tmdb.org/t/p/w500/";
+        const apiKey = "6a9a25e3dfcce2dec181187fd5733435";
+        var curntPage = 1;
+        var totalResult = 0;
+        var totalPage = 0;
+
+        async function getRecord(curPage) {
+            curntPage = Number(curPage);
+            if (curntPage == 1) {
+                document.getElementsByClassName("nxtPrv")[0].style.display = "none"
+            } else {
+                document.getElementsByClassName("nxtPrv")[0].style.display = "initial"
+            }
+            let getUrl = urlPath + "?api_key=" + apiKey + "&page=" + curPage;
+            let request = new XMLHttpRequest();
+            request.open("GET", getUrl);
+            var response = request.send();
+
+            request.onload = () => {
+                movieList = (JSON.parse(request.response).results);
+                totalResult = JSON.parse(request.response).total_results;
+                totalPage = JSON.parse(request.response).total_pages;
+                showMovie();
+            }
         }
 
         function showMovie() {
-            document.getElementById("showMovie").innerHTML =
-                '<div class="col-md-3 col-sm-6" style="margin-top: 20px;text-align: center;"> <div class="card"> <img class="card-img-top" src="' +
-                data[0].Poster + ' "> <div class="card-body"> <h3 class="card-title">' + data[0].Title + '</h3> <p class="card-text">' + data[0].Plot +
-                '</p> <a href="#" class="btn btn-primary" style="position: relative !important; margin-top: 0px;float: right;">Know More</a> </div> </div> </div>'
+            document.getElementById("showMovie").innerHTML = "";
+            let i = 0;
+            let disp = "";
+            for (i; i < movieList.length; i++) {
+                if (i % 4 == 0) {
+                    disp += '<tr><div class="col-md-3 col-sm-6 card-box"> <div class="card">' +
+                        '<a href="Movie Details.html?mId=' + movieList[i].id + '"><img class="card-img" alt="Image not Available" src=' + imageUrl + movieList[i].poster_path + '></a> <div class="card-body"> <h3 class="card-title">' +
+                        movieList[i].original_title + '</h3> <p class="card-text">' + "Rating : " + movieList[i].vote_average + '/10</p> <a href = "' + movieList[i].id +
+                        '"class = "btn btn-primary"> Know More </a> </div> </div></div> '
+                } else {
+                    disp += '<div class="col-md-3 col-sm-6 card-box"> <div class="card">' +
+                        '<a href="Movie Details.html?mId=' + movieList[i].id + '"><img class="card-img" alt="Image not Available" src=' + imageUrl + movieList[i].poster_path + '></a> <div class="card-body"> <h3 class="card-title">' +
+                        movieList[i].original_title + '</h3> <p class="card-text">' + "Rating : " + movieList[i].vote_average + '/10</p> <a href = "Movie Details.html?mId=' + movieList[i].id +
+                        '"class = "btn btn-primary"> Know More </a> </div> </div></div> '
+                }
+            }
+            disp += '</tr>'
+            document.getElementById("showMovie").innerHTML += disp;
+        }
+
+        function searchMovie(txtbox) {
+            if (txtbox.value == "" || txtbox.value == null || txtbox.value == undefined) {
+                getRecord(1);
+            } else {
+                let request = new XMLHttpRequest();
+                request.open("GET", "https://api.themoviedb.org/3/search/movie?api_key=6a9a25e3dfcce2dec181187fd5733435&query=" + txtbox.value + "&include_adult=false");
+                var response = request.send();
+
+                request.onload = () => {
+                    movieList = (JSON.parse(request.response).results);
+                    showMovie();
+                }
+            }
         }
     </script>
 </head>
 
-<body onload="callApi()" style="background-color: #181818; color: blanchedalmond;">
-    <div class="col-sm-12" style="max-height: 61px;background-color: black;">
-        <h1 style="margin-top: 10px; color: #e50914; font-family: cursive; font-weight: 900;">
-            Movie World
+<body class="mainBody" onload="getRecord(curntPage)">
+    <div class="col-sm-12 headerPart">
+        <h1>
+            <a class="mainLogo" href="Movie.html">Movie World</a>
         </h1>
     </div>
-    <div id="showMovie" class="col-sm-12">
-        <!-- <div class="col-md-3 col-sm-6" style="margin-top: 20px;text-align: center;">
-            <div class="card">
-                <img class="card-img-top" src="https://m.media-amazon.com/images/M/MV5BNjM0NTc0NzItM2FlYS00YzEwLWE0YmUtNTA2ZWIzODc2OTgxXkEyXkFqcGdeQXVyNTgwNzIyNzg@._V1_SX300.jpg">
-                <div class="card-body">
-                    <h3 class="card-title">data.Title</h3>
-                    <p class="card-text">data.Plot</p>
-                    <a href="#" class="btn btn-primary" style="position: relative !important; margin-top: 0px;float: right;">Know More</a>
-                </div>
-            </div>
-        </div> -->
+    <div class="col-sm-12">
+        <div id="pagination" class="col-sm-6 pageJump">
+
+            <button class="nxtPrv" onclick="getRecord(curntPage-1)">Previous</button>
+            <input type="text" name="pageNo" placeholder="Page No" onchange="getRecord(this.value)" style="font-size: 20px;height: 35px;color: #555; background-color: #fff; background-image: none; border: 1px solid #ccc; border-radius: 4px;width: 150px;">
+            <button class="nxtPrv" onclick="getRecord(curntPage+1)">Next</button>
+
+        </div>
+        <div class="searchBox">
+            <input onchange="searchMovie(this)" type="text" name="txtSearch" placeholder="Search" class="form-control">
+        </div>
+    </div>
+    <table>
+        <tbody id="showMovie">
+        </tbody>
+    </table>
     </div>
 </body>
 

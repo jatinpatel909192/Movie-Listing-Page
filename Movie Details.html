@@ -1,0 +1,55 @@
+<html>
+
+<head>
+    <title>
+        MOVIE
+    </title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const mId = urlParams.get('mId');
+
+        const urlPath = "https://api.themoviedb.org/3/movie/";
+        const imageUrl = "https://image.tmdb.org/t/p/w500/";
+        const apiKey = "6a9a25e3dfcce2dec181187fd5733435";
+        var record = []
+
+        async function getPera() {
+
+            let request = new XMLHttpRequest();
+            request.open("GET", urlPath + mId + "?api_key=" + apiKey);
+            var response = request.send();
+
+            request.onload = () => {
+                record = JSON.parse(request.response);
+                document.getElementById("view").innerHTML =
+                    '<ul> <img src= ' + imageUrl + record.poster_path +
+                    '> </ul> <ul> <h1>' +
+                    record.title +
+                    '</h1><hr> </ul> <ul> <div class="col-sm-6 col-md-6" style="text-align:left"> <h3> <strong>Rating : </strong>' +
+                    record.vote_average +
+                    '</h3> </div> <div class="col-sm-6 col-md-6" style="text-align:right"> <h3> <strong>Release Date : </strong> ' +
+                    record.release_date +
+                    '</h3> </div> </ul> <ul> <p style="font-size: 20px;text-align: justify">' +
+                    record.overview +
+                    '</p> </ul>'
+
+            }
+        }
+    </script>
+</head>
+
+<body class="mainBody" onload="getPera()">
+    <div class="col-sm-12 headerPart">
+        <h1>
+            <a class="mainLogo" href="Movie.html">Movie World</a>
+        </h1>
+    </div>
+    <div id="view">
+    </div>
+</body>
+
+</html>
