@@ -8,74 +8,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <script>
-        var movieList = [];
-        const urlPath = "https://api.themoviedb.org/3/movie/popular";
-        const imageUrl = "https://image.tmdb.org/t/p/w500/";
-        const apiKey = "6a9a25e3dfcce2dec181187fd5733435";
-        var curntPage = 1;
-        var totalResult = 0;
-        var totalPage = 0;
 
-        async function getRecord(curPage) {
-            curntPage = Number(curPage);
-            if (curntPage == 1) {
-                document.getElementsByClassName("nxtPrv")[0].style.display = "none"
-            } else {
-                document.getElementsByClassName("nxtPrv")[0].style.display = "initial"
-            }
-            let getUrl = urlPath + "?api_key=" + apiKey + "&page=" + curPage;
-            let request = new XMLHttpRequest();
-            request.open("GET", getUrl);
-            var response = request.send();
-
-            request.onload = () => {
-                movieList = (JSON.parse(request.response).results);
-                totalResult = JSON.parse(request.response).total_results;
-                totalPage = JSON.parse(request.response).total_pages;
-                showMovie();
-            }
-        }
-
-        function showMovie() {
-            document.getElementById("showMovie").innerHTML = "";
-            let i = 0;
-            let disp = "";
-            for (i; i < movieList.length; i++) {
-                if (i % 4 == 0) {
-                    disp += '<tr><div class="col-md-3 col-sm-6 card-box"> <div class="card">' +
-                        '<a href="Movie Details.html?mId=' + movieList[i].id + '"><img class="card-img" alt="Image not Available" src=' + imageUrl + movieList[i].poster_path + '></a> <div class="card-body"> <h3 class="card-title">' +
-                        movieList[i].original_title + '</h3> <p class="card-text">' + "Rating : " + movieList[i].vote_average + '/10</p> <a href = "' + movieList[i].id +
-                        '"class = "btn btn-primary"> Know More </a> </div> </div></div> '
-                } else {
-                    disp += '<div class="col-md-3 col-sm-6 card-box"> <div class="card">' +
-                        '<a href="Movie Details.html?mId=' + movieList[i].id + '"><img class="card-img" alt="Image not Available" src=' + imageUrl + movieList[i].poster_path + '></a> <div class="card-body"> <h3 class="card-title">' +
-                        movieList[i].original_title + '</h3> <p class="card-text">' + "Rating : " + movieList[i].vote_average + '/10</p> <a href = "Movie Details.html?mId=' + movieList[i].id +
-                        '"class = "btn btn-primary"> Know More </a> </div> </div></div> '
-                }
-            }
-            disp += '</tr>'
-            document.getElementById("showMovie").innerHTML += disp;
-        }
-
-        function searchMovie(txtbox) {
-            if (txtbox.value == "" || txtbox.value == null || txtbox.value == undefined) {
-                getRecord(1);
-            } else {
-                let request = new XMLHttpRequest();
-                request.open("GET", "https://api.themoviedb.org/3/search/movie?api_key=6a9a25e3dfcce2dec181187fd5733435&query=" + txtbox.value + "&include_adult=false");
-                var response = request.send();
-
-                request.onload = () => {
-                    movieList = (JSON.parse(request.response).results);
-                    showMovie();
-                }
-            }
-        }
-    </script>
 </head>
 
 <body class="mainBody" onload="getRecord(curntPage)">
+
     <div class="col-sm-12 headerPart">
         <h1>
             <a class="mainLogo" href="Movie.html">Movie World</a>
@@ -99,5 +36,70 @@
     </table>
     </div>
 </body>
+<script>
+    var movieList = [];
+    const urlPath = "https://api.themoviedb.org/3/movie/popular";
+    const imageUrl = "https://image.tmdb.org/t/p/w500/";
+    const apiKey = "6a9a25e3dfcce2dec181187fd5733435";
+    var curntPage = 1;
+    var totalResult = 0;
+    var totalPage = 0;
+
+    async function getRecord(curPage) {
+        curntPage = Number(curPage);
+        if (curntPage == 1) {
+            document.getElementsByClassName("nxtPrv")[0].style.display = "none"
+        } else {
+            document.getElementsByClassName("nxtPrv")[0].style.display = "initial"
+        }
+        let getUrl = urlPath + "?api_key=" + apiKey + "&page=" + curPage;
+        let request = new XMLHttpRequest();
+        request.open("GET", getUrl);
+        var response = request.send();
+
+        request.onload = () => {
+            movieList = (JSON.parse(request.response).results);
+            totalResult = JSON.parse(request.response).total_results;
+            totalPage = JSON.parse(request.response).total_pages;
+            showMovie();
+        }
+    }
+
+    function showMovie() {
+        document.getElementById("showMovie").innerHTML = "";
+        let i = 0;
+        let disp = "";
+        for (i; i < movieList.length; i++) {
+            if (i % 4 == 0) {
+                disp += '<tr><div class="col-md-3 col-sm-6 card-box"> <div class="card">' +
+                    '<a href="Movie Details.html?mId=' + movieList[i].id + '"><img class="card-img" alt="Image not Available" src=' + imageUrl + movieList[i].poster_path + '></a> <div class="card-body"> <h3 class="card-title">' +
+                    movieList[i].original_title + '</h3> <p class="card-text">' + "Rating : " + movieList[i].vote_average + '/10</p> <a href = "' + movieList[i].id +
+                    '"class = "btn btn-primary"> Know More </a> </div> </div></div> '
+            } else {
+                disp += '<div class="col-md-3 col-sm-6 card-box"> <div class="card">' +
+                    '<a href="Movie Details.html?mId=' + movieList[i].id + '"><img class="card-img" alt="Image not Available" src=' + imageUrl + movieList[i].poster_path + '></a> <div class="card-body"> <h3 class="card-title">' +
+                    movieList[i].original_title + '</h3> <p class="card-text">' + "Rating : " + movieList[i].vote_average + '/10</p> <a href = "Movie Details.html?mId=' + movieList[i].id +
+                    '"class = "btn btn-primary"> Know More </a> </div> </div></div> '
+            }
+        }
+        disp += '</tr>'
+        document.getElementById("showMovie").innerHTML += disp;
+    }
+
+    function searchMovie(txtbox) {
+        if (txtbox.value == "" || txtbox.value == null || txtbox.value == undefined) {
+            getRecord(1);
+        } else {
+            let request = new XMLHttpRequest();
+            request.open("GET", "https://api.themoviedb.org/3/search/movie?api_key=6a9a25e3dfcce2dec181187fd5733435&query=" + txtbox.value + "&include_adult=false");
+            var response = request.send();
+
+            request.onload = () => {
+                movieList = (JSON.parse(request.response).results);
+                showMovie();
+            }
+        }
+    }
+</script>
 
 </html>

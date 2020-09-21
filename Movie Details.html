@@ -8,6 +8,17 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+</head>
+
+<body class="mainBody" onload="getPera()">
+    <div class="col-sm-12 headerPart">
+        <h1>
+            <a class="mainLogo" href="Movie.html">Movie World</a>
+        </h1>
+    </div>
+    <div id="view">
+    </div>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const mId = urlParams.get('mId');
@@ -24,6 +35,11 @@
             var response = request.send();
 
             request.onload = () => {
+                console.log(request.status)
+                if (request.status != 200) {
+                    // alert("Invalid URL");
+                    window.location.href = "Movie.html";
+                }
                 record = JSON.parse(request.response);
                 document.getElementById("view").innerHTML =
                     '<ul> <img src= ' + imageUrl + record.poster_path +
@@ -40,16 +56,6 @@
             }
         }
     </script>
-</head>
-
-<body class="mainBody" onload="getPera()">
-    <div class="col-sm-12 headerPart">
-        <h1>
-            <a class="mainLogo" href="Movie.html">Movie World</a>
-        </h1>
-    </div>
-    <div id="view">
-    </div>
 </body>
 
 </html>
